@@ -108,9 +108,9 @@ document.addEventListener("DOMContentLoaded", function (){
     }
 
     function validarEmail(email){
-        // if (email.id == "cc" && email.value.trim() == ""){
-        //     return true;
-        // } 
+        if (email.id == "cc" && email.value.trim() == ""){
+             return true;
+        } 
         const regex =  /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/
         const resultado = regex.test(email.value)
         console.log(resultado)
