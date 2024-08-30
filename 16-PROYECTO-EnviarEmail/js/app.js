@@ -129,8 +129,9 @@ document.addEventListener("DOMContentLoaded", function (){
     }
 
     function activarBoton(status){
+        console.log("Me llamaron----" + status);
         status ? btnSubmit.classList.remove("opacity-50") : btnSubmit.classList.add("opacity-50");
-        btnSubmit.disabled = status;
+        btnSubmit.disabled = !status;
     }
 
     function resetFormulario() {
