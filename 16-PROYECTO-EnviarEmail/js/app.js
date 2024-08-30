@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function (){
         email: "",
         asunto: "",
         mensaje: "",
+        cc : ""
     };
 
     console.log(email)
@@ -23,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function (){
     inputEmail.addEventListener("input", validar);  
     inputAsunto.addEventListener("input", validar);  
     inputMensaje.addEventListener("input", validar);
-    inputCc.addEventListener("input", validarCc);
+    inputCc.addEventListener("input", validar);
 
     formulario.addEventListener("submit", enviarEmail);
 
@@ -60,23 +61,23 @@ document.addEventListener("DOMContentLoaded", function (){
         }, 3000);
     }
 
-    function validar (e) {
-       if(e.target.value.trim() === ""){
+    function validar (e) { 
+        console.log(e.target.name + "--d--" + e.target.value);
+        
+       if(e.target.value.trim() === "" && e.target.id != "cc"){
             mostrarAlerta(`El campo ${e.target.id} es obligatorio`, e.target.parentElement);
             email[e.target.name] = '';
             comprobarEmail();
             return;
        }
 
-       if(e.target.id === "email" && !validarEmail(e.target.value)){
+       if((e.target.id === "email" || e.target.id === "cc" ) && !validarEmail(e.target)){
             mostrarAlerta("El email no es valido", e.target.parentElement);
             email[e.target.name] = '';
-            comprobarEmail();
             return;
        }
 
        limpiarAlerta(e.target.parentElement);
-
        //Asignar los valores
        email[e.target.name] = e.target.value.trim().toLowerCase();
 
@@ -85,17 +86,9 @@ document.addEventListener("DOMContentLoaded", function (){
 
     }
 
-    function validarCc (e) {
-        if(e.target.value.trim() !== "" && !validarEmail(e.target.value)){
-            mostrarAlerta("El email no es válido", e.target.parentElement)
-            email[e.target.name] = "";
-            comprobarEmail();
-            return;
-        }
-    }
-
     function mostrarAlerta(mensaje, referencia) {
         //Comprueba si ya existe una alerta
+        activarBoton(false);
         limpiarAlerta(referencia);
 
         //Generar alerta en HTML
@@ -115,20 +108,29 @@ document.addEventListener("DOMContentLoaded", function (){
     }
 
     function validarEmail(email){
+        // if (email.id == "cc" && email.value.trim() == ""){
+        //     return true;
+        // } 
         const regex =  /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/
-        const resultado = regex.test(email)
+        const resultado = regex.test(email.value)
         console.log(resultado)
         return resultado;
     }
 
     function comprobarEmail(){
-        if(Object.values(email).includes("")){
-            btnSubmit.classList.add("opacity-50");
-            btnSubmit.disabled = true;
+        console.log(email);
+        //desactiva en base a si esta vacio alguno de los valores del objeto
+        if(email.email.trim() == "" || email.asunto.trim() == "" || email.mensaje.trim() == ""){
+            activarBoton(false);
             return
         }
-        btnSubmit.classList.remove("opacity-50");
-        btnSubmit.disabled = false;
+        //activa cuando no se cumple la condicion
+        activarBoton(true);
+    }
+
+    function activarBoton(status){
+        status ? btnSubmit.classList.remove("opacity-50") : btnSubmit.classList.add("opacity-50");
+        btnSubmit.disabled = status;
     }
 
     function resetFormulario() {
